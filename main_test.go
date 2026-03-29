@@ -57,7 +57,7 @@ func TestMainRawFormat(t *testing.T) {
 	)
 	assert.Nil(t, err)
 	assert.Contains(t, out.String(), "v=spf1 -all")
-	assert.Contains(t, out.String(), "a.iana-servers.net")
+	assert.Containsf(t, out.String(), "hera.ns.cloudflare.com", out.String())
 }
 
 func TestMainJSONFormat(t *testing.T) {
@@ -69,7 +69,7 @@ func TestMainJSONFormat(t *testing.T) {
 	assert.Nil(t, err)
 	o := strings.ReplaceAll(out.String(), `\\"`, `"`)
 	assert.Contains(t, o, `"preference":0,"mx":"."`)
-	assert.Contains(t, o, `"ns":"a.iana-servers.net."`)
+	assert.Contains(t, o, "hera.ns.cloudflare.com")
 	assert.Contains(t, o, `"txt":["v=spf1 -all"`)
 }
 
@@ -640,7 +640,7 @@ func TestIDNAUnderscoreASCII(t *testing.T) {
 func TestMainEDE_Raw(t *testing.T) {
 	out, err := run(
 		"--all",
-		"-f", "raw",
+		"-f=raw",
 		"A",
 		"ede-6.extended-dns-errors.com",
 		"+ede",
