@@ -10,7 +10,7 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/miekg/dns v1.1.72
 	github.com/natesales/bgptools-go v0.0.0-20230212051756-2b519d61269c
-	github.com/quic-go/quic-go v0.59.0
+	github.com/quic-go/quic-go v0.59.1
 	github.com/sthorne/odoh-go v1.0.4
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/net v0.51.0
