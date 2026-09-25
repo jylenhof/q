@@ -38,6 +38,14 @@ type Flags struct {
 	// Special query modes
 	RecAXFR bool `long:"recaxfr" description:"Perform recursive AXFR"`
 
+	// Registry lookup (RDAP / port-43 WHOIS) — distinct from -w (bgptools ASN enrichment)
+	Registry      bool   `short:"g" long:"registry" description:"Resolve target via RDAP with WHOIS fallback"`
+	RegistryRDAP  bool   `long:"registry-rdap" description:"Resolve target via RDAP only"`
+	RDAPServer    string `long:"rdap-server" description:"RDAP base URL override (skips bootstrap)"`
+	RIR           string `long:"rir" description:"Force RIR for registry lookups: iana, arin, ripe, apnic, lacnic, afrinic" default:"iana"`
+	RegistryWhois bool   `long:"registry-whois" description:"Resolve target via port-43 WHOIS only"`
+	WhoisServer   string `long:"whois-server" description:"Port-43 WHOIS server override (host or host:port)"`
+
 	// Output
 	Format         string `short:"f" long:"format" description:"Output format (pretty, column, json, yaml, raw)" default:"pretty"`
 	PrettyTTLs     bool   `long:"pretty-ttls" description:"Format TTLs in human readable format (default: true)"`

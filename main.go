@@ -23,6 +23,7 @@ import (
 
 	"github.com/natesales/q/cli"
 	"github.com/natesales/q/output"
+	"github.com/natesales/q/registry"
 	"github.com/natesales/q/transport"
 	"github.com/natesales/q/util"
 	tlsutil "github.com/natesales/q/util/tls"
@@ -345,6 +346,33 @@ All long form (--) flags can be toggled with the dig-standard +[no]flag notation
 			!strings.HasPrefix(arg, "-") { // Not a flag
 			opts.Name = arg
 		}
+	}
+
+	// Registry lookup (RDAP / port-43 WHOIS)
+	// rdap first, whois fallback, autoresolve LIR via -SUFFIX
+	if opts.Registry || opts.RegistryRDAP || opts.RegistryWhois {
+		if opts.Name == "" {
+			return fmt.Errorf("registry lookup: target required")
+		}
+		useRDAP := opts.RegistryRDAP || opts.Registry
+		useWHOIS := opts.RegistryWhois || opts.Registry
+		ctx, cancel := context.WithTimeout(context.Background(), opts.Timeout)
+		defer cancel()
+		text, err := registry.Query(ctx, registry.Options{
+			Target:      opts.Name,
+			UseRDAP:     useRDAP,
+			UseWHOIS:    useWHOIS,
+			RDAPServer:  opts.RDAPServer,
+			WhoisServer: opts.WhoisServer,
+			RIR:         strings.ToLower(opts.RIR),
+			Format:      opts.Format,
+			Timeout:     opts.Timeout,
+		})
+		if err != nil {
+			return err
+		}
+		util.MustWritef(out, "%s\n", text)
+		return nil
 	}
 
 	// If no RR types are defined, set a list of default ones
